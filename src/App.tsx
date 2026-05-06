@@ -36,19 +36,36 @@ function App() {
   const filteredContacts = useMemo(() => {
     if (!debouncedSearch.trim()) return contacts;
 
-    const searchChars = debouncedSearch.toLowerCase().split("");
+    const searchText = debouncedSearch.toLowerCase().replace(/\s/g, "");
+
+    const getCharCount = (text: string) => {
+      const map: Record<string, number> = {};
+
+      for (const char of text) {
+        map[char] = (map[char] || 0) + 1;
+      }
+
+      return map;
+    };
+
+    const searchCharCount = getCharCount(searchText);
 
     return contacts.filter((contact) => {
       const fullText = `
         ${contact.first_name}
         ${contact.last_name}
         ${contact.mobile}
-      `.toLowerCase();
+      `
+        .toLowerCase()
+        .replace(/\s/g, "");
 
-      return searchChars.every((char) => fullText.includes(char));
+      const contactCharCount = getCharCount(fullText);
+
+      return Object.entries(searchCharCount).every(
+        ([char, count]) => (contactCharCount[char] || 0) >= count
+      );
     });
   }, [contacts, debouncedSearch]);
-
   return (
     <div className="container app-wrapper">
       <div className="card p-4 main-card">
