@@ -1,0 +1,31 @@
+body {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .app-wrapper {
+    padding: 40px 0;
+  }
+  
+  .main-card {
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  }
+  
+  .contact-img {
+    height: 180px;
+    object-fit: contain;
+  }
+  
+  .search-input {
+    border-radius: 12px;
+  }
+  
+  .card-hover {
+    transition: 0.3s;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-5px);
+  }
