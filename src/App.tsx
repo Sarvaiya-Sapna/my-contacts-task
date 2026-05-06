@@ -33,20 +33,20 @@ function App() {
 
     loadContacts();
   }, []);
-
   const filteredContacts = useMemo(() => {
-    let updatedContacts = [...contacts];
+    if (!debouncedSearch.trim()) return contacts;
 
-    if (debouncedSearch) {
-      updatedContacts = updatedContacts.filter((contact) =>
-        Object.values(contact)
-          .join(" ")
-          .toLowerCase()
-          .includes(debouncedSearch.toLowerCase())
-      );
-    }
+    const searchChars = debouncedSearch.toLowerCase().split("");
 
-    return updatedContacts;
+    return contacts.filter((contact) => {
+      const fullText = `
+        ${contact.first_name}
+        ${contact.last_name}
+        ${contact.mobile}
+      `.toLowerCase();
+
+      return searchChars.every((char) => fullText.includes(char));
+    });
   }, [contacts, debouncedSearch]);
 
   return (
@@ -72,7 +72,11 @@ function App() {
             <div className="row">
               {filteredContacts.length > 0 ? (
                 filteredContacts.map((contact) => (
-                  <ContactList key={contact.id} contact={contact} />
+                  <ContactList
+                    key={contact.id}
+                    contact={contact}
+                    search={debouncedSearch}
+                  />
                 ))
               ) : (
                 <h5 className="text-center">No Contacts Found</h5>
